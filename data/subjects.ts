@@ -1,4 +1,4 @@
-export type TagType = 'general' | 'assessment' | 'lecturer' | 'exam' | 'workload'
+export type TagType = 'general' | 'assessment' | 'lecturer' | 'exam' | 'workload' | 'exam-debrief'
 
 export interface Post {
   id: string
@@ -34,6 +34,7 @@ export interface Subject {
   overallScore: number
   workloadRating: number
   recommendPercent: number
+  examDate: string | null
   aiSummary: AISummary
   posts: Post[]
 }
@@ -57,6 +58,7 @@ export const subjects: Subject[] = [
     overallScore: 4.3,
     workloadRating: 3.8,
     recommendPercent: 91,
+    examDate: '2026-06-08',
     aiSummary: {
       overview:
         'COMP30026 is a rigorous third-year theory subject covering formal languages, automata, computability, and computational complexity. It is one of the most mathematically demanding subjects in the CS major — expect 10–12 hours per week. Highly recommended for students who want to understand the theoretical limits of computing, but not a subject to take lightly.',
@@ -148,6 +150,7 @@ export const subjects: Subject[] = [
     overallScore: 3.9,
     workloadRating: 4.6,
     recommendPercent: 78,
+    examDate: '2026-06-12',
     aiSummary: {
       overview:
         'SWEN30006 is a third-year capstone-style subject focused on software design patterns, architectural styles, UML modelling, and applying them to a substantial group project. The workload is demanding — expect 12–15 hours per week, especially near delivery milestones. Most students say it is the subject that finally made their code feel professional.',
@@ -238,6 +241,7 @@ export const subjects: Subject[] = [
     overallScore: 3.6,
     workloadRating: 4.2,
     recommendPercent: 71,
+    examDate: '2026-06-15',
     aiSummary: {
       overview:
         'MAST30021 is a beautiful and challenging third-year pure maths subject covering complex differentiation, analytic functions, Cauchy\'s theorem, and contour integration. It is considered one of the most elegant subjects in the maths major but also one of the hardest — expect 12+ hours per week. Students who enjoy rigorous proof-based mathematics tend to love it.',
@@ -320,6 +324,7 @@ export const subjects: Subject[] = [
     overallScore: 3.8,
     workloadRating: 3.2,
     recommendPercent: 80,
+    examDate: '2026-06-10',
     aiSummary: {
       overview:
         'ECON20001 is a second-year macroeconomics subject that goes well beyond the introductory course — expect rigorous IS-LM and AD-AS model analysis, open economy dynamics, and formal mathematical derivations. The workload is moderate-heavy and the exam is challenging. Broadly recommended for students serious about economics or policy.',
@@ -410,6 +415,7 @@ export const subjects: Subject[] = [
     overallScore: 3.5,
     workloadRating: 4.0,
     recommendPercent: 73,
+    examDate: '2026-06-17',
     aiSummary: {
       overview:
         'FNCE30007 is a third-year finance elective covering the pricing and use of options, futures, swaps, and other derivative instruments using the Black-Scholes model and binomial trees. It is quantitatively demanding — the hardest subject many finance students encounter. Highly recommended if you are interested in trading, risk management, or quant finance.',
@@ -502,6 +508,7 @@ export const subjects: Subject[] = [
     overallScore: 4.4,
     workloadRating: 2.8,
     recommendPercent: 94,
+    examDate: '2026-06-19',
     aiSummary: {
       overview:
         "PHIL20030 is a second-year philosophy subject exploring the hardest questions about consciousness, mental causation, and the nature of mind. Topics include functionalism, qualia, the hard problem of consciousness, and AI — making it highly relevant for computing and science students. Workload is moderate; the writing is demanding but the content is genuinely mind-expanding.",
@@ -583,6 +590,7 @@ export const subjects: Subject[] = [
     overallScore: 4.1,
     workloadRating: 3.0,
     recommendPercent: 87,
+    examDate: null,
     aiSummary: {
       overview:
         'HIST20055 is a second-year history subject that goes deep into Cold War geopolitics — from the Berlin Crisis and Cuban Missile Crisis through to the Soviet collapse and the War on Terror. It is one of the best-structured history subjects at UniMelb, with a strong reading list and well-designed assessments. Light-moderate workload with no exam.',

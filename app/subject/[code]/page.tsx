@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import AISummaryCard from '@/components/AISummaryCard'
 import DiscussionSection from '@/components/DiscussionSection'
+import ShareButton from '@/components/ShareButton'
 import { Badge } from '@/components/ui/badge'
 import { getSubjectByCode, subjects } from '@/data/subjects'
 
@@ -46,7 +47,7 @@ export default async function SubjectPage({ params }: Props) {
 
         {/* subject header */}
         <div className="flex flex-col gap-3 mb-7">
-          <div className="flex items-start gap-3 flex-wrap">
+          <div className="flex items-start justify-between gap-3 flex-wrap">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-medium text-brand tracking-wide uppercase">
@@ -64,6 +65,7 @@ export default async function SubjectPage({ params }: Props) {
               </h1>
               <p className="mt-0.5 text-sm text-muted-foreground">{subject.faculty}</p>
             </div>
+            <ShareButton subject={subject} />
           </div>
 
           {/* stats row */}
@@ -107,7 +109,7 @@ export default async function SubjectPage({ params }: Props) {
 
         {/* discussion */}
         <div className="mt-10">
-          <DiscussionSection initialPosts={subject.posts} />
+          <DiscussionSection initialPosts={subject.posts} examDate={subject.examDate} />
         </div>
       </main>
 

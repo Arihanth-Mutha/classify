@@ -12,6 +12,7 @@ const TAG_LABELS: Record<TagType, string> = {
   lecturer: 'lecturer',
   exam: 'exam',
   workload: 'workload',
+  'exam-debrief': 'exam debrief',
 }
 
 const TAG_COLOURS: Record<TagType, string> = {
@@ -20,6 +21,7 @@ const TAG_COLOURS: Record<TagType, string> = {
   lecturer: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800',
   exam: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800',
   workload: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
+  'exam-debrief': 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-700',
 }
 
 const ANIMALS = [
@@ -32,11 +34,20 @@ function randomAuthor() {
   return `anonymous_${ANIMALS[Math.floor(Math.random() * ANIMALS.length)]}`
 }
 
-interface PostCardProps {
-  post: Post
+function getDaysUntilExam(examDate: string): number {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const exam = new Date(examDate)
+  exam.setHours(0, 0, 0, 0)
+  return Math.ceil((exam.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 }
 
-function PostCard({ post }: PostCardProps) {
+interface PostCardProps {
+  post: Post
+  pinned?: boolean
+}
+
+function PostCard({ post, pinned }: PostCardProps) {
   const [upvotes, setUpvotes] = useState(post.upvotes)
   const [voted, setVoted] = useState(false)
 
@@ -50,7 +61,13 @@ function PostCard({ post }: PostCardProps) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card px-4 py-4 flex flex-col gap-3">
+    <div
+      className={`rounded-xl border px-4 py-4 flex flex-col gap-3 ${
+        pinned
+          ? 'bg-amber-50 border-[#FAC775] dark:bg-amber-950/40 dark:border-amber-700'
+          : 'bg-card border-border'
+      }`}
+    >
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-foreground">{post.author}</span>
@@ -59,6 +76,14 @@ function PostCard({ post }: PostCardProps) {
           >
             {TAG_LABELS[post.tag]}
           </span>
+          {pinned && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-400">
+              <svg className="size-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+              </svg>
+              pinned
+            </span>
+          )}
         </div>
         <span className="text-xs text-muted-foreground">{post.semester}</span>
       </div>
@@ -82,16 +107,34 @@ function PostCard({ post }: PostCardProps) {
   )
 }
 
-interface DiscussionSectionProps {
-  initialPosts: Post[]
+const PINNED_DEBRIEF_POST: Post = {
+  id: 'pinned-exam-debrief',
+  author: 'Class-ify',
+  tag: 'exam-debrief',
+  content:
+    'The exam is done. Share your experience — what came up, what surprised you, tips for next year\'s students.',
+  upvotes: 0,
+  semester: 'Sem 1, 2026',
 }
 
-export default function DiscussionSection({ initialPosts }: DiscussionSectionProps) {
+interface DiscussionSectionProps {
+  initialPosts: Post[]
+  examDate?: string | null
+}
+
+export default function DiscussionSection({ initialPosts, examDate }: DiscussionSectionProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
   const [activeTag, setActiveTag] = useState<TagType | 'all'>('all')
   const [newContent, setNewContent] = useState('')
   const [newTag, setNewTag] = useState<TagType>('general')
   const [submitting, setSubmitting] = useState(false)
+
+  const daysUntilExam = examDate ? getDaysUntilExam(examDate) : null
+  const examHasPassed = daysUntilExam !== null && daysUntilExam <= 0
+
+  const availableTags = (Object.keys(TAG_LABELS) as TagType[]).filter(
+    (t) => t !== 'exam-debrief' || examHasPassed
+  )
 
   const filtered =
     activeTag === 'all' ? posts : posts.filter((p) => p.tag === activeTag)
@@ -116,6 +159,9 @@ export default function DiscussionSection({ initialPosts }: DiscussionSectionPro
     }, 400)
   }
 
+  const filterTags: (TagType | 'all')[] = ['all', 'general', 'assessment', 'lecturer', 'exam', 'workload']
+  if (examHasPassed) filterTags.push('exam-debrief')
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-2">
@@ -123,9 +169,37 @@ export default function DiscussionSection({ initialPosts }: DiscussionSectionPro
         <span className="text-xs text-muted-foreground">{posts.length} posts</span>
       </div>
 
+      {/* exam countdown or debrief banner */}
+      {examDate && !examHasPassed && daysUntilExam !== null && (
+        <div className="flex items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-4 py-3">
+          <svg className="size-4 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-xs text-muted-foreground">
+            Exam in{' '}
+            <span className="font-medium text-foreground">
+              {daysUntilExam} {daysUntilExam === 1 ? 'day' : 'days'}
+            </span>
+            {' '}· good luck 🤞
+          </p>
+        </div>
+      )}
+
+      {examHasPassed && (
+        <div className="rounded-xl border border-[#FAC775] bg-[#BA7517]/10 dark:bg-amber-950/30 px-4 py-3 flex items-center gap-2">
+          <span className="size-2 rounded-full bg-amber-500 animate-pulse shrink-0" />
+          <p className="text-xs font-medium text-amber-800 dark:text-amber-400">
+            exam debrief live
+          </p>
+          <span className="text-xs text-amber-700/70 dark:text-amber-500/70 ml-0.5">
+            · share your experience below
+          </span>
+        </div>
+      )}
+
       {/* tag filter */}
       <div className="flex flex-wrap gap-2">
-        {(['all', 'general', 'assessment', 'lecturer', 'exam', 'workload'] as const).map((tag) => (
+        {filterTags.map((tag) => (
           <button
             key={tag}
             onClick={() => setActiveTag(tag)}
@@ -135,10 +209,15 @@ export default function DiscussionSection({ initialPosts }: DiscussionSectionPro
                 : 'bg-transparent text-muted-foreground border-border hover:border-[#534AB7] hover:text-[#534AB7]'
             }`}
           >
-            {tag}
+            {tag === 'exam-debrief' ? 'exam debrief' : tag}
           </button>
         ))}
       </div>
+
+      {/* pinned exam debrief post */}
+      {examHasPassed && (activeTag === 'all' || activeTag === 'exam-debrief') && (
+        <PostCard post={PINNED_DEBRIEF_POST} pinned />
+      )}
 
       {/* posts */}
       <div className="flex flex-col gap-3">
@@ -158,7 +237,7 @@ export default function DiscussionSection({ initialPosts }: DiscussionSectionPro
         <h3 className="text-sm font-medium text-foreground mb-4">Share your experience</h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-wrap gap-2">
-            {(Object.keys(TAG_LABELS) as TagType[]).map((tag) => (
+            {availableTags.map((tag) => (
               <button
                 key={tag}
                 type="button"
@@ -169,7 +248,7 @@ export default function DiscussionSection({ initialPosts }: DiscussionSectionPro
                     : 'bg-transparent text-muted-foreground border-border hover:border-[#534AB7] hover:text-[#534AB7]'
                 }`}
               >
-                {tag}
+                {TAG_LABELS[tag]}
               </button>
             ))}
           </div>

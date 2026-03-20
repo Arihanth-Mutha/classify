@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { Subject } from '@/data/subjects'
+import { useMySubjects } from '@/hooks/useMySubjects'
 
 interface SubjectCardProps {
   subject: Subject
@@ -9,6 +12,18 @@ interface SubjectCardProps {
 
 export default function SubjectCard({ subject }: SubjectCardProps) {
   const stars = Math.round(subject.overallScore)
+  const { isSaved, addSubject, removeSubject, hydrated } = useMySubjects()
+  const saved = hydrated && isSaved(subject.code)
+
+  function handleToggleSave(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (saved) {
+      removeSubject(subject.code)
+    } else {
+      addSubject(subject.code)
+    }
+  }
 
   return (
     <Link href={`/subject/${subject.code.toLowerCase()}`} className="block group">
@@ -53,6 +68,33 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
             <span className="ml-auto text-muted-foreground/60">·</span>
             <span>{subject.posts.length} posts</span>
           </div>
+
+          {hydrated && (
+            <button
+              onClick={handleToggleSave}
+              className={`mt-0.5 flex items-center gap-1.5 w-fit rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                saved
+                  ? 'bg-[#534AB7] text-white border-[#534AB7]'
+                  : 'bg-transparent text-muted-foreground border-border hover:border-[#534AB7] hover:text-[#534AB7]'
+              }`}
+            >
+              {saved ? (
+                <>
+                  <svg className="size-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                  </svg>
+                  saved
+                </>
+              ) : (
+                <>
+                  <svg className="size-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 20 20">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                  </svg>
+                  add to my subjects
+                </>
+              )}
+            </button>
+          )}
         </CardContent>
       </Card>
     </Link>
