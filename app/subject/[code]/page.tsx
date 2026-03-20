@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import AISummaryCard from '@/components/AISummaryCard'
 import DiscussionSection from '@/components/DiscussionSection'
+import ExamDebriefSection from '@/components/ExamDebriefSection'
 import ShareButton from '@/components/ShareButton'
 import { Badge } from '@/components/ui/badge'
 import { getSubjectByCode, subjects } from '@/data/subjects'
@@ -104,10 +105,20 @@ export default async function SubjectPage({ params }: Props) {
           </div>
         </div>
 
-        {/* AI summary */}
+        {/* AI summary — reads from subject.posts only */}
         <AISummaryCard subject={subject} />
 
-        {/* discussion */}
+        {/* exam debrief — separate from regular posts, not in AI summary */}
+        {subject.examDate && (
+          <div className="mt-10">
+            <ExamDebriefSection
+              examDate={subject.examDate}
+              initialPosts={subject.examDebriefPosts}
+            />
+          </div>
+        )}
+
+        {/* regular discussion */}
         <div className="mt-10">
           <DiscussionSection initialPosts={subject.posts} examDate={subject.examDate} />
         </div>

@@ -1,4 +1,12 @@
-export type TagType = 'general' | 'assessment' | 'lecturer' | 'exam' | 'workload' | 'exam-debrief'
+export type TagType = 'general' | 'assessment' | 'lecturer' | 'exam' | 'workload'
+
+export interface DebriefPost {
+  id: string
+  author: string
+  content: string
+  upvotes: number
+  semester: string
+}
 
 export interface Post {
   id: string
@@ -37,6 +45,7 @@ export interface Subject {
   examDate: string | null
   aiSummary: AISummary
   posts: Post[]
+  examDebriefPosts: DebriefPost[]
 }
 
 export const FACULTIES = [
@@ -139,6 +148,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 2, 2023',
       },
     ],
+    examDebriefPosts: [],
   },
 
   {
@@ -230,6 +240,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 2, 2024',
       },
     ],
+    examDebriefPosts: [],
   },
 
   {
@@ -312,6 +323,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 1, 2024',
       },
     ],
+    examDebriefPosts: [],
   },
 
   // ─── Business & Economics ─────────────────────────────────────────────────
@@ -404,6 +416,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 1, 2024',
       },
     ],
+    examDebriefPosts: [],
   },
 
   {
@@ -496,6 +509,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 1, 2024',
       },
     ],
+    examDebriefPosts: [],
   },
 
   // ─── Arts & Humanities ────────────────────────────────────────────────────
@@ -579,6 +593,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 1, 2024',
       },
     ],
+    examDebriefPosts: [],
   },
 
   {
@@ -680,6 +695,7 @@ export const subjects: Subject[] = [
         semester: 'Sem 2, 2024',
       },
     ],
+    examDebriefPosts: [],
   },
 ]
 
