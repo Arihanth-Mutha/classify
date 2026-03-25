@@ -88,7 +88,7 @@ export default function ShareButton({ subject }: ShareButtonProps) {
     // stats boxes
     const stats = [
       { label: 'workload', value: `${subject.workloadRating.toFixed(1)} / 5` },
-      { label: 'exam difficulty', value: subject.aiSummary.examIntel.includes('harder') ? 'hard' : 'moderate' },
+      { label: 'exam difficulty', value: subject.aiSummary.examIntel.difficultyVsPastPapers === 'harder' ? 'hard' : subject.aiSummary.examIntel.difficultyVsPastPapers },
       { label: 'recommend', value: `${subject.recommendPercent}%` },
     ]
 

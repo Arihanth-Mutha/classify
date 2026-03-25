@@ -25,11 +25,26 @@ export interface LecturerProfile {
   responsiveness: string
 }
 
+export type ExamDifficulty = 'easier' | 'similar' | 'harder'
+
+export interface ExamTip {
+  id: string
+  text: string
+  helpfulCount: number
+}
+
+export interface ExamIntel {
+  difficultyVsPastPapers: ExamDifficulty
+  formatNotes: string[]
+  tips: ExamTip[]
+  postCount: number
+}
+
 export interface AISummary {
   overview: string
   lecturers: LecturerProfile[]
   assessments: string
-  examIntel: string
+  examIntel: ExamIntel
   vibeCheck: string
 }
 
@@ -96,8 +111,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Three programming assignments worth 20% each and a final written exam worth 40%. Assignments have clear specs and autograder feedback. Recurring feedback: start early, autograder edge cases trip up last-minute submitters. The third assignment is notably harder than the first two — budget extra time.',
-      examIntel:
-        'The exam is 2 hours, closed book, and covers both theory (tracing, complexity) and practical Python questions. It is harder than past papers suggest — recent exams have introduced more debugging and code-explanation questions. Tip: practice writing code by hand, not just running it.',
+      examIntel: {
+        difficultyVsPastPapers: 'harder',
+        formatNotes: [
+          '2 hours, closed book',
+          'Mix of theory (tracing, complexity) and practical Python questions',
+          'Recent exams added debugging and code-explanation questions not in past papers',
+        ],
+        tips: [
+          { id: 'comp-t1', text: 'Practice writing code by hand — the exam requires it, not just running it in an IDE', helpfulCount: 34 },
+          { id: 'comp-t2', text: 'Trace through functions manually and predict output before checking — they test this directly', helpfulCount: 28 },
+          { id: 'comp-t3', text: 'Past papers underrepresent the difficulty — treat them as a floor, not a ceiling', helpfulCount: 19 },
+        ],
+        postCount: 5,
+      },
       vibeCheck:
         'Everyone is in the same boat, the tutors actually care, and debugging your first program feels genuinely rewarding.',
     },
@@ -179,8 +206,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Three increasingly complex Java projects (20%, 25%, 30%) plus a final written exam (25%). Projects involve building a game engine from scratch using an internal framework called Bagel. Recurring feedback: read the spec thoroughly before writing a single line of code. Project 3 is a significant jump in difficulty.',
-      examIntel:
-        'Written exam covers OOP theory, UML diagrams, design patterns, and Java syntax. Harder than expected — the UML questions catch many students off guard. Past papers are useful but recent exams have focused more on design pattern application than pure Java knowledge. Open to notes? No, it is closed book.',
+      examIntel: {
+        difficultyVsPastPapers: 'harder',
+        formatNotes: [
+          'Written exam, closed book',
+          'Covers OOP theory, UML diagrams, design patterns, and Java syntax',
+          'Focuses on design pattern application rather than pure Java knowledge',
+        ],
+        tips: [
+          { id: 'swen-t1', text: 'Practice drawing class diagrams by hand — muscle memory matters when time is short', helpfulCount: 41 },
+          { id: 'swen-t2', text: 'UML questions are underestimated by most students — allocate more time to them than you think', helpfulCount: 37 },
+          { id: 'swen-t3', text: 'Past papers are useful but recent exams lean heavily on design pattern application, not syntax recall', helpfulCount: 22 },
+        ],
+        postCount: 6,
+      },
       vibeCheck:
         "Genuinely hard, occasionally stressful, but you'll finish the semester feeling like a real software developer.",
     },
@@ -271,8 +310,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Three written assignments (30% total), a mid-semester test (20%), and a final exam (50%). Assignments require full working — marks are deducted for correct answers without justification. Recurring feedback: show all working, even for steps that seem obvious.',
-      examIntel:
-        'Three-hour exam, closed book. Covers all topics but consistently heaviest on integration techniques, ODEs, and series convergence. Harder than most past papers; the 2023 exam introduced more applied word problems. Tips: memorise the key integration identities and practice Taylor series expansions.',
+      examIntel: {
+        difficultyVsPastPapers: 'harder',
+        formatNotes: [
+          '3 hours, closed book',
+          'Heaviest on integration techniques, ODEs, and series convergence',
+          'Applied word problems have increased in recent years — expect more than past papers suggest',
+        ],
+        tips: [
+          { id: 'mast-t1', text: 'Cap yourself at 12 minutes per question — skip and return rather than getting stuck', helpfulCount: 47 },
+          { id: 'mast-t2', text: 'Memorise the key integration identities cold — you cannot derive them under time pressure', helpfulCount: 56 },
+          { id: 'mast-t3', text: 'Practice Taylor series expansions until they are completely automatic', helpfulCount: 39 },
+        ],
+        postCount: 5,
+      },
       vibeCheck:
         "If you survived, you are a different person — tougher and more analytically sharp than when you started.",
     },
@@ -364,8 +415,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Two written assignments (20% each), tutorial participation (10%), and a final exam (50%). Assignments require applying models to real data and current events. Recurring feedback: use diagrams to support your written analysis — markers reward visual model application.',
-      examIntel:
-        'Two hours, open notes. Yes, open notes — but do not let that fool you into not preparing. Questions require model application and diagram drawing under time pressure. Past papers are very representative. Focus on IS-LM model, Keynesian cross, and exchange rate mechanisms.',
+      examIntel: {
+        difficultyVsPastPapers: 'similar',
+        formatNotes: [
+          '2 hours, open notes',
+          'Questions require model application and diagram drawing under time pressure',
+          'Past papers are very representative of the real exam',
+        ],
+        tips: [
+          { id: 'econ-t1', text: 'Know every model cold — open notes means nothing when there is no time to look things up', helpfulCount: 62 },
+          { id: 'econ-t2', text: 'Draw IS-LM, Keynesian cross, and exchange rate diagrams for every relevant question, even unprompted', helpfulCount: 51 },
+          { id: 'econ-t3', text: 'Focus revision on IS-LM, Keynesian cross, and exchange rate mechanisms above everything else', helpfulCount: 44 },
+        ],
+        postCount: 5,
+      },
       vibeCheck:
         "You will never read the news the same way again — and that is genuinely useful outside of uni.",
     },
@@ -457,8 +520,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Two assignments (15% each), a mid-semester test (20%), and a final exam (50%). Assignments involve spreadsheet-based DCF models and case analysis. Recurring feedback: Excel skills matter — if you are not comfortable with financial modelling, practise before the assignments.',
-      examIntel:
-        'Two hours, formula sheet provided. Questions are heavily calculation-based — expect DCF, NPV, CAPM, and portfolio variance questions. The 2024 exam included a multi-stage DCF question that many students ran out of time on. Practice under exam conditions with the actual formula sheet.',
+      examIntel: {
+        difficultyVsPastPapers: 'harder',
+        formatNotes: [
+          '2 hours, formula sheet provided',
+          'Heavily calculation-based — DCF, NPV, CAPM, and portfolio variance',
+          'Multi-stage DCF question has appeared on recent exams and catches students on time',
+        ],
+        tips: [
+          { id: 'fnce-t1', text: 'Memorise portfolio variance and CAPM variants not included on the formula sheet', helpfulCount: 48 },
+          { id: 'fnce-t2', text: 'Practice full mock exams with the actual formula sheet — it is slower to use than you expect', helpfulCount: 35 },
+          { id: 'fnce-t3', text: 'Budget time carefully — multi-step calculations eat into the clock much faster than single-formula questions', helpfulCount: 29 },
+        ],
+        postCount: 5,
+      },
       vibeCheck:
         "Tough, but you will genuinely understand how money and markets work — which is not nothing.",
     },
@@ -541,8 +616,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Two short essays (30% each) and a final essay (40%). All open-book, take-home style. Recurring feedback: essays must have a clear, arguable thesis — descriptive summaries of a philosopher\'s view score poorly. Quality of argument matters far more than length.',
-      examIntel:
-        'No formal exam — the final "exam" is a take-home essay submitted within a 24-hour window. You are given a choice of three questions and write on one. Strong emphasis on original critical analysis, not just regurgitating lecture content. Use the philosophers as starting points, not as authorities to agree with.',
+      examIntel: {
+        difficultyVsPastPapers: 'similar',
+        formatNotes: [
+          'Take-home essay, 24-hour submission window',
+          'Choice of three questions — write on one',
+          'Strong emphasis on original critical analysis, not lecture summary',
+        ],
+        tips: [
+          { id: 'phil-t1', text: 'Plan your entire argument structure before you write the first sentence — the 24 hours goes fast', helpfulCount: 71 },
+          { id: 'phil-t2', text: 'Use philosophers as starting points and foils, not as authorities to simply agree with', helpfulCount: 55 },
+          { id: 'phil-t3', text: 'Quality of argument matters far more than word count — a tighter essay scores better than a padded one', helpfulCount: 43 },
+        ],
+        postCount: 5,
+      },
       vibeCheck:
         "You will leave the exam genuinely unsure if you exist, but weirdly okay with that.",
     },
@@ -634,8 +721,20 @@ export const subjects: Subject[] = [
       ],
       assessments:
         'Weekly reading responses (10%), a source analysis essay (25%), a research essay (40%), and tutorial participation (25%). Recurring feedback: source analysis essays need to engage with context and historiography, not just summarise the document. Cite secondary sources to show you understand the broader debate.',
-      examIntel:
-        'No exam — assessed entirely through coursework. The research essay is the main event — choose a topic you are genuinely interested in, because 3,000 words requires sustained motivation. Start your research in week 4; the library databases are excellent for this subject.',
+      examIntel: {
+        difficultyVsPastPapers: 'similar',
+        formatNotes: [
+          'No formal exam — assessed entirely through coursework',
+          'Research essay (40%) is the primary assessment, 3,000 words',
+          'Weekly reading responses (10%) must be maintained throughout semester',
+        ],
+        tips: [
+          { id: 'hist-t1', text: 'Start your research essay in week 4 — the library databases for this subject are genuinely excellent', helpfulCount: 53 },
+          { id: 'hist-t2', text: 'Source analysis essays need historiography — who wrote it, why, what was left out, how historians use it', helpfulCount: 38 },
+          { id: 'hist-t3', text: 'Book a session with the history subject librarian in weeks 4–5 — it will change your research approach', helpfulCount: 29 },
+        ],
+        postCount: 6,
+      },
       vibeCheck:
         "Every news alert makes more sense after this subject — and the world stops looking random.",
     },

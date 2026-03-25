@@ -128,7 +128,7 @@ export default function ExamDebriefSection({ examDate, initialPosts }: ExamDebri
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div id="exam-debrief" className="flex flex-col gap-5">
       {/* section header */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2.5">

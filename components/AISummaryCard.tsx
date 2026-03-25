@@ -1,4 +1,5 @@
 import type { Subject } from '@/data/subjects'
+import ExamIntelCard from '@/components/ExamIntelCard'
 
 interface AISummaryCardProps {
   subject: Subject
@@ -70,7 +71,14 @@ export default function AISummaryCard({ subject }: AISummaryCardProps) {
 
         <div className="h-px bg-[#AFA9EC]/30 dark:bg-[#3D3570]/50" />
 
-        <Section title="Exam intel">{aiSummary.examIntel}</Section>
+        <div className="flex flex-col gap-1.5">
+          <p className="text-xs font-medium text-brand uppercase tracking-wide">Exam intel</p>
+          <ExamIntelCard
+            examIntel={aiSummary.examIntel}
+            examDate={subject.examDate}
+            examDebriefPosts={subject.examDebriefPosts}
+          />
+        </div>
 
         <div className="h-px bg-[#AFA9EC]/30 dark:bg-[#3D3570]/50" />
 
