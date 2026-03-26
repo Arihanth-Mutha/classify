@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Figtree } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
+import ComparisonTray from '@/components/ComparisonTray'
 
 const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -18,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn('dark font-sans antialiased', figtree.variable)}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ComparisonTray />
+      </body>
     </html>
   )
 }

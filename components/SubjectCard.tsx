@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { Subject } from '@/data/subjects'
 import { useMySubjects } from '@/hooks/useMySubjects'
+import { useCompare } from '@/hooks/useCompare'
 
 interface SubjectCardProps {
   subject: Subject
@@ -13,16 +14,23 @@ interface SubjectCardProps {
 export default function SubjectCard({ subject }: SubjectCardProps) {
   const stars = Math.round(subject.overallScore)
   const { isSaved, addSubject, removeSubject, hydrated } = useMySubjects()
+  const { isInCompare, addToCompare, removeFromCompare, atMax } = useCompare()
   const saved = hydrated && isSaved(subject.code)
+  const inCompare = hydrated && isInCompare(subject.code)
+  const compareDisabled = hydrated && atMax && !inCompare
 
   function handleToggleSave(e: React.MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
-    if (saved) {
-      removeSubject(subject.code)
-    } else {
-      addSubject(subject.code)
-    }
+    if (saved) removeSubject(subject.code)
+    else addSubject(subject.code)
+  }
+
+  function handleToggleCompare(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (inCompare) removeFromCompare(subject.code)
+    else addToCompare(subject.code)
   }
 
   return (
@@ -38,10 +46,7 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                 {subject.name}
               </h3>
             </div>
-            <Badge
-              variant="outline"
-              className="shrink-0 text-xs text-muted-foreground"
-            >
+            <Badge variant="outline" className="shrink-0 text-xs text-muted-foreground">
               {subject.creditPoints} pts
             </Badge>
           </div>
@@ -70,30 +75,37 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
           </div>
 
           {hydrated && (
-            <button
-              onClick={handleToggleSave}
-              className={`mt-0.5 flex items-center gap-1.5 w-fit rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                saved
-                  ? 'bg-[#534AB7] text-white border-[#534AB7]'
-                  : 'bg-transparent text-muted-foreground border-border hover:border-[#534AB7] hover:text-[#534AB7]'
-              }`}
-            >
-              {saved ? (
-                <>
-                  <svg className="size-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                  </svg>
+            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+              <button
+                onClick={handleToggleSave}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
                   saved
-                </>
-              ) : (
-                <>
-                  <svg className="size-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 20 20">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                  </svg>
-                  add to my subjects
-                </>
-              )}
-            </button>
+                    ? 'bg-[#534AB7] text-white border-[#534AB7]'
+                    : 'bg-transparent text-muted-foreground border-border hover:border-[#534AB7] hover:text-[#534AB7]'
+                }`}
+              >
+                <svg className="size-3" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} viewBox="0 0 20 20">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                </svg>
+                {saved ? 'saved' : 'save'}
+              </button>
+
+              <button
+                onClick={handleToggleCompare}
+                disabled={compareDisabled}
+                title={compareDisabled ? 'Maximum 3 subjects' : undefined}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                  inCompare
+                    ? 'bg-[#534AB7] text-white border-[#534AB7]'
+                    : 'bg-transparent text-muted-foreground border-border hover:border-[#534AB7] hover:text-[#534AB7]'
+                }`}
+              >
+                <svg className="size-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+                {inCompare ? 'comparing' : 'compare'}
+              </button>
+            </div>
           )}
         </CardContent>
       </Card>

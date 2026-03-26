@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import NavCompareCount from '@/components/NavCompareCount'
 
 export default function Navbar() {
   return (
@@ -10,6 +11,16 @@ export default function Navbar() {
           </span>
         </Link>
         <nav className="flex items-center gap-4">
+          <Link
+            href="/compare"
+            className="relative flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <svg className="size-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
+            </svg>
+            compare
+            <NavCompareCount />
+          </Link>
           <Link
             href="/dashboard"
             className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
